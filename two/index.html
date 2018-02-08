@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+   div {
+    border: 1px solid red;
+    padding: 10px;
+    width: 20px;
+   }
+  </style>
+</head>
+<body>
+
+<input type="number" id="myNumber" value="">
+<button onclick="myFunction()">Добавить элемент в массив</button>
+
+<input type="number" id="findNumber" value="">
+<button onclick="findFunction()">Найти число</button>
+
+<p id="demo"></p> 
+
+<script>
+var mas = [];
+var i = 0;
+function myFunction() {  
+    var x = document.getElementById("myNumber").value;        
+    if (x) {
+      mas.push(x);          
+      var div = document.createElement("div");
+      div.setAttribute("id", ++i);
+      var p = document.getElementById("demo");
+      div.innerHTML = x;
+      p.appendChild(div);
+    } else {
+      alert("Введите число");
+    }   
+  }
+
+function findFunction() {
+  var c = 0;
+  var p = document.getElementById("demo");
+  var divs = p.getElementsByTagName("div");
+  for (var i = 0; i < divs.length; i++) {
+        divs[i].style.backgroundColor = "white";
+     }
+  var x = document.getElementById("findNumber").value;
+  if (x) {    
+    for (var i = 0; i < divs.length; i++) {
+        var div = divs[i];
+        console.log(div.innerHTML);
+        if (div.innerHTML == x) { 
+          ++c;
+          div.style.backgroundColor = 'green';
+        } 
+       }
+       if (!c) {
+          var newWin = window.open("wrong.png","mywin","menubar=0,resizable=0,width=200,height=200");         
+       }
+      } else {
+          alert("Введите число");
+      }
+    }      
+</script>
+
+</body>
+</html>
