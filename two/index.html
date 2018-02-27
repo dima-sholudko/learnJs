@@ -11,8 +11,7 @@
 </head>
 <body>
 
-<input type="number" id="myNumber" value="">
-<button onclick="myFunction()">Добавить элемент в массив</button>
+<input type="file" id="fileName">
 
 <input type="number" id="findNumber" value="">
 <button onclick="findFunction()">Найти число</button>
@@ -20,46 +19,83 @@
 <p id="demo"></p> 
 
 <script>
-var mas = [];
-var i = 0;
-function myFunction() {  
-    var x = document.getElementById("myNumber").value;        
-    if (x) {
-      mas.push(x);          
-      var div = document.createElement("div");
-      div.setAttribute("id", ++i);
-      var p = document.getElementById("demo");
-      div.innerHTML = x;
-      p.appendChild(div);
-    } else {
-      alert("Введите число");
-    }   
+var control = document.getElementById("fileName");
+control.addEventListener("change", function(event){
+  var i = 0, files = control.files, len = control.length;
+
+  console.log(files[0]);  
+  if (files[0].type.match('text')) {
+    var f = files[0];
+    var reader = new FileReader();
+    reader.readAsText(f);
+    reader.onload = function (e) {
+       var textToArray = reader.result.split("\n").map(function(x){
+        return x.split(",")
+      });
+
+       textToArray.sort(compareNumeric);
+       addDiv(textToArray);
+       console.log(textToArray); 
+     };
   }
+}, false);
+
+var mas = [];
+function addDiv(arr) {
+     for (var i = 1 ; i < arr.length; i++) {
+      var v = arr[i];      
+      mas.push(+v);          
+      var div = document.createElement("div");
+      div.setAttribute("id", v);
+      console.log(div);
+      var p = document.getElementById("demo");
+      div.innerHTML = v;
+      p.appendChild(div);
+      } 
+    }
+
+    function compareNumeric(a, b) {
+        return a - b;
+      }
+  
 
 function findFunction() {
-  var c = 0;
-  var p = document.getElementById("demo");
-  var divs = p.getElementsByTagName("div");
-  for (var i = 0; i < divs.length; i++) {
-        divs[i].style.backgroundColor = "white";
-     }
   var x = document.getElementById("findNumber").value;
-  if (x) {    
-    for (var i = 0; i < divs.length; i++) {
+  console.log(x);
+  var id = binarySearch(x, mas);
+  changeColor(id);
+ }      
+function binarySearch(elem, arr){                                
+    var i = 0, j = arr.length-1, k;   
+
+    while (i <= j)
+    {  k = Math.floor((i+j)/2);
+       if (elem == arr[k]) return arr[k];
+       else if (elem < arr[k]) j = k-1;
+       else i = k+1;
+    }                       
+    return null;         
+}
+function changeColor(elem){
+  var c;
+  if (elem) {
+     var divs = document.getElementsByTagName("div");
+      for (var i = 0; i < divs.length; i++) {
+            divs[i].style.backgroundColor = "white";
+         }
+      for (var i = 0; i < divs.length; i++) {
         var div = divs[i];
-        console.log(div.innerHTML);
-        if (div.innerHTML == x) { 
+        if (div.innerHTML == elem) { 
           ++c;
           div.style.backgroundColor = 'green';
         } 
        }
-       if (!c) {
-          var newWin = window.open("wrong.png","mywin","menubar=0,resizable=0,width=200,height=200");         
-       }
       } else {
-          alert("Введите число");
+          window.open("wrong.png","mywin","menubar=0,resizable=0,width=200,height=200");   
       }
-    }      
+
+  }
+ 
 </script>
 
 </body>
